@@ -8,9 +8,9 @@ override _build_MakeFile_PL_template => sub {
 	my ($self) = @_;
 
 	my $template  = <<'TEMPLATE';
-chdir('xs/libgit2');
-system('make', '-f', 'Makefile.embed');
-chdir('../..');
+use Devel::CheckLib;
+
+check_lib_or_exit(lib => ['git2']);
 
 TEMPLATE
 
@@ -20,8 +20,9 @@ TEMPLATE
 override _build_WriteMakefile_args => sub {
 	return +{
 		%{ super() },
-		INC	=> '-I. -Ixs/libgit2/include',
-		OBJECT	=> '$(O_FILES) xs/libgit2/libgit2.a',
+		INC	=> '-I.',
+		OBJECT	=> '$(O_FILES)',
+		LIBS => '-lgit2,
 	}
 };
 
